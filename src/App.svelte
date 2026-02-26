@@ -26,6 +26,26 @@
   }
 </script>
 
+<style>
+  :global(.card-actions) {
+    position: relative;
+    isolation: isolate;
+  }
+
+  :global(.card-actions:has(.bundle-redeem-button[aria-label^="Redeem"]) .sr-only) {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 0;
+    z-index: 10;
+    display: block !important;
+    clip: auto !important;
+    margin: 0 !important;
+    cursor: pointer;
+  }
+</style>
+
 <svelte:head>
   <title>{lang.title}</title>
 </svelte:head>
