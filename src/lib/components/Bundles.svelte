@@ -2,7 +2,7 @@
   lang='ts'>
   import type { Bundle } from '../stores/bundles'
 
-  import { Popover } from 'bits-ui'
+  import { Dialog } from 'bits-ui'
   import { lang } from '../../lang'
   import Card from './Card.svelte'
 
@@ -65,21 +65,29 @@
       {lang.bundles.priceValue}
     </div>
     {#if bundle.status === 'available'}
-      <Popover.Root bind:open>
-        <Popover.Trigger
+      <Dialog.Root bind:open>
+        <Dialog.Trigger
           class='bundle-redeem-button'>
           {buttonText}
-        </Popover.Trigger>
-        <Popover.Content
-          class='date-picker-popover'>
-          <input
-            aria-label={`Select redemption date for ${bundle.title}`}
-            class='date-picker-input'
-            onchange={handleDateSelect}
-            type='date'
-          />
-        </Popover.Content>
-      </Popover.Root>
+        </Dialog.Trigger>
+        <Dialog.Portal>
+          <Dialog.Overlay class='dialog-overlay' />
+          <Dialog.Content
+            class='dialog-content'>
+            <Dialog.Title class='dialog-title'>Select Date</Dialog.Title>
+            <Dialog.Description class='dialog-description'>
+              Choose when you'd like to redeem {bundle.title}
+            </Dialog.Description>
+            <input
+              aria-label={`Select redemption date for ${bundle.title}`}
+              class='date-picker-input'
+              onchange={handleDateSelect}
+              type='date'
+            />
+            <Dialog.Close class='dialog-close'>Cancel</Dialog.Close>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     {:else}
       <button
         class='bundle-redeem-button'
