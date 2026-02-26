@@ -2,9 +2,9 @@
   lang='ts'>
   import type { Bundle } from '../stores/bundles'
 
-  import { Dialog } from 'bits-ui'
   import { lang } from '../../lang'
   import Card from './Card.svelte'
+  import DatePicker from './DatePicker.svelte'
 
   interface Props {
     bundle: Bundle;
@@ -12,7 +12,6 @@
   }
 
   let { bundle, onRedeem }: Props = $props()
-  let open = $state(false)
 
   const isPending = $derived(bundle.status === 'pending')
   const buttonText = $derived(
@@ -29,12 +28,8 @@
       : null
   )
 
-  function handleDateSelect(event: Event) {
-    const target = event.target as HTMLInputElement
-    if (target.value) {
-      onRedeem(bundle.id, target.value)
-      open = false
-    }
+  function handleDateSelect(date: string) {
+    onRedeem(bundle.id, date)
   }
 </script>
 
@@ -65,29 +60,9 @@
       {lang.bundles.priceValue}
     </div>
     {#if bundle.status === 'available'}
-      <Dialog.Root bind:open>
-        <Dialog.Trigger
-          class='bundle-redeem-button'>
-          {buttonText}
-        </Dialog.Trigger>
-        <Dialog.Portal>
-          <Dialog.Overlay class='dialog-overlay' />
-          <Dialog.Content
-            class='dialog-content'>
-            <Dialog.Title class='dialog-title'>Select Date</Dialog.Title>
-            <Dialog.Description class='dialog-description'>
-              Choose when you'd like to redeem {bundle.title}
-            </Dialog.Description>
-            <input
-              aria-label={`Select redemption date for ${bundle.title}`}
-              class='date-picker-input'
-              onchange={handleDateSelect}
-              type='date'
-            />
-            <Dialog.Close class='dialog-close'>Cancel</Dialog.Close>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
+      <DatePicker
+        {buttonText}
+        onDateSelect={handleDateSelect} />
     {:else}
       <button
         class='bundle-redeem-button'
