@@ -30,7 +30,7 @@
 
   function handleRedeemClick() {
     if (bundle.status !== 'available') return
-    dateInput.showPicker()
+    dateInput.click()
   }
 
   function handleDateSelect(event: Event) {
