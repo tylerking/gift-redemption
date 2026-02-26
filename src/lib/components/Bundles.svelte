@@ -2,6 +2,7 @@
   lang='ts'>
   import type { Bundle } from '../stores/bundles'
 
+  import { Popover } from 'bits-ui'
   import { lang } from '../../lang'
   import Card from './Card.svelte'
 
@@ -11,7 +12,7 @@
   }
 
   let { bundle, onRedeem }: Props = $props()
-  let dateInput: HTMLInputElement
+  let open = $state(false)
 
   const isPending = $derived(bundle.status === 'pending')
   const buttonText = $derived(
@@ -23,20 +24,16 @@
   )
 
   const formattedDate = $derived(
-    bundle.redemptionDate 
+    bundle.redemptionDate
       ? new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', timeZone: 'UTC', year: 'numeric' }).format(new Date(bundle.redemptionDate))
       : null
   )
-
-  function handleRedeemClick() {
-    if (bundle.status !== 'available') return
-    dateInput.click()
-  }
 
   function handleDateSelect(event: Event) {
     const target = event.target as HTMLInputElement
     if (target.value) {
       onRedeem(bundle.id, target.value)
+      open = false
     }
   }
 </script>
@@ -67,24 +64,32 @@
       class='bundle-price'>
       {lang.bundles.priceValue}
     </div>
-    <button
-      aria-label={bundle.status === 'redeemed' ? `${bundle.title} redeemed` : isPending ? `${bundle.title} pending` : `Redeem ${bundle.title}`}
-      class='bundle-redeem-button'
-      disabled={bundle.status !== 'available'}
-      onclick={handleRedeemClick}
-    >
-      {buttonText}
-    </button>
+    {#if bundle.status === 'available'}
+      <Popover.Root bind:open>
+        <Popover.Trigger
+          class='bundle-redeem-button'>
+          {buttonText}
+        </Popover.Trigger>
+        <Popover.Content
+          class='date-picker-popover'>
+          <input
+            aria-label={`Select redemption date for ${bundle.title}`}
+            class='date-picker-input'
+            onchange={handleDateSelect}
+            type='date'
+          />
+        </Popover.Content>
+      </Popover.Root>
+    {:else}
+      <button
+        class='bundle-redeem-button'
+        disabled>
+        {buttonText}
+      </button>
+    {/if}
     {#if formattedDate && bundle.status !== 'available'}
       <div
         class='bundle-date'>{formattedDate}</div>
     {/if}
-    <input
-      aria-label={lang.ui.datePickerLabel}
-      bind:this={dateInput}
-      class='sr-only'
-      onchange={handleDateSelect}
-      type='date'
-    />
   {/snippet}
 </Card>
