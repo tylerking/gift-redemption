@@ -7,7 +7,7 @@ export const lang = {
   },
 
   footer: {
-    line1: 'Made with love (and a dose of panic) for my favorite person.',
+    line1: 'Made with love (and a healthy dose of panic) for my favorite person.',
     line2: 'Sorry for being a forgetful',
   },
 
