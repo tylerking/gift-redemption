@@ -1,6 +1,6 @@
-# The Valentine's Day Redemption
+# Gift Redemption
 
-A TypeScript and Svelte application to apologize for failing on Valentine's Day 2026
+A TypeScript and Svelte application to redeem gifts
 
 ## Features
 
